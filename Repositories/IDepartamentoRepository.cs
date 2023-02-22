@@ -2,7 +2,7 @@
 
 namespace DepartamentosMunicipiosMVC.Repositories
 {
-    public interface IGenericRepository
+    public interface IDepartamentoRepository
     {
         Task<List<Departamento>> GetAll();
         Task<Departamento> FindById(int? id);

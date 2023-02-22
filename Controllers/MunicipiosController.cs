@@ -7,15 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DepartamentosMunicipiosMVC.Data;
 using DepartamentosMunicipiosMVC.Models;
+using DepartamentosMunicipiosMVC.Repositories;
+using AutoMapper;
 
 namespace DepartamentosMunicipiosMVC.Controllers
 {
     public class MunicipiosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly MunicipioRepository _repository;
 
-        public MunicipiosController(ApplicationDbContext context)
+        public MunicipiosController(ApplicationDbContext context, IMapper mapper)
         {
+            _repository = new MunicipioRepository(context, mapper);
             _context = context;
         }
 

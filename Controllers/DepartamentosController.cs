@@ -9,7 +9,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
 {
     public class DepartamentosController : Controller
     {
-        private readonly IGenericRepository _repository;
+        private readonly IDepartamentoRepository _repository;
         public DepartamentosController(ApplicationDbContext context, IMapper mapper)
         {
             _repository = new DepartamentoRepository(context, mapper);

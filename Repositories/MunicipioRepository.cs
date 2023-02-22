@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using DepartamentosMunicipiosMVC.Data;
 using DepartamentosMunicipiosMVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DepartamentosMunicipiosMVC.Repositories
 {
-    public class MunicipioRepository : IGenericRepository
+    public class MunicipioRepository : IMunicipioRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -13,39 +14,46 @@ namespace DepartamentosMunicipiosMVC.Repositories
             this._context = context;
             this._mapper = mapper;
         }
-        public Task<int> Count()
+        public async Task<int> Count()
         {
-            throw new NotImplementedException();
+            return await _context.Municipios.CountAsync();
         }
 
-        public Task<int> Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            throw new NotImplementedException();
+            var municipio = await FindById(id);
+            if (municipio != null)
+            {
+                _context.Municipios.Remove(municipio);
+            }
+            return await _context.SaveChangesAsync();
         }
 
         public bool Exists(int id)
         {
-            throw new NotImplementedException();
+            return (_context.Departamentos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public Task<Departamento> FindById(int? id)
+        public async Task<Municipio> FindById(int? id)
         {
-            throw new NotImplementedException();
+            return await _context.Municipios.FindAsync(id);
         }
 
-        public Task<List<Departamento>> GetAll()
+        public Task<List<Municipio>> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Municipios.ToListAsync();
         }
 
-        public Task<int> Insert(Departamento departamento)
+        public async Task<int> Insert(Municipio municipio)
         {
-            throw new NotImplementedException();
+            _context.Add(municipio);
+            return await _context.SaveChangesAsync();
         }
 
-        public Task<int> Update(Departamento departamento)
+        public async Task<int> Update(Municipio municipio)
         {
-            throw new NotImplementedException();
+            _context.Update(municipio);
+            return await _context.SaveChangesAsync();
         }
     }
 }

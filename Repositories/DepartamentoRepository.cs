@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DepartamentosMunicipiosMVC.Repositories
 {
-    public class DepartamentoRepository : IGenericRepository
+    public class DepartamentoRepository : IDepartamentoRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace DepartamentosMunicipiosMVC.Repositories
 
         public async Task<int> Delete(int id)
         {
-            var departamento = await _context.Departamentos.FindAsync(id);
+            var departamento = await FindById(id);
             if (departamento != null)
             {
                 _context.Departamentos.Remove(departamento);
