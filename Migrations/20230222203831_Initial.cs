@@ -5,13 +5,29 @@
 namespace DepartamentosMunicipiosMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class Municipios : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Municipio",
+                name: "Departamentos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CNRCompleto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Latitud = table.Column<float>(type: "real", nullable: true),
+                    Longitud = table.Column<float>(type: "real", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departamentos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Municipios",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -24,17 +40,17 @@ namespace DepartamentosMunicipiosMVC.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Municipio", x => x.Id);
+                    table.PrimaryKey("PK_Municipios", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Municipio_Departamentos_DepartamentoId",
+                        name: "FK_Municipios_Departamentos_DepartamentoId",
                         column: x => x.DepartamentoId,
                         principalTable: "Departamentos",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Municipio_DepartamentoId",
-                table: "Municipio",
+                name: "IX_Municipios_DepartamentoId",
+                table: "Municipios",
                 column: "DepartamentoId");
         }
 
@@ -42,7 +58,10 @@ namespace DepartamentosMunicipiosMVC.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Municipio");
+                name: "Municipios");
+
+            migrationBuilder.DropTable(
+                name: "Departamentos");
         }
     }
 }

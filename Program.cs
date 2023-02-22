@@ -15,8 +15,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
 
 // Inject Repositories in controllers
-builder.Services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
-//builder.Services.AddScoped<IMunicipioRepository, MunicipioRepository>();
+builder.Services.AddScoped<IGenericRepository, DepartamentoRepository>();
+builder.Services.AddScoped<IGenericRepository, MunicipioRepository>();
 
 var app = builder.Build();
 

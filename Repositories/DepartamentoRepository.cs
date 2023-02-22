@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DepartamentosMunicipiosMVC.Repositories
 {
-    public class DepartamentoRepository : IDepartamentoRepository
+    public class DepartamentoRepository : IGenericRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -36,7 +36,7 @@ namespace DepartamentosMunicipiosMVC.Repositories
             return (_context.Departamentos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<Departamento> FindById(int id)
+        public async Task<Departamento> FindById(int? id)
         {
             return await _context.Departamentos.FindAsync(id);
         }

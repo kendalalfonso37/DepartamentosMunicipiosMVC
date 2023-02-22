@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DepartamentosMunicipiosMVC.Data;
@@ -144,7 +148,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
         {
             if (_context.Municipios == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Municipio'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Municipios'  is null.");
             }
             var municipio = await _context.Municipios.FindAsync(id);
             if (municipio != null)

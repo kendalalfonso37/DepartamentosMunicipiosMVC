@@ -9,34 +9,28 @@ namespace DepartamentosMunicipiosMVC.Controllers
 {
     public class DepartamentosController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IDepartamentoRepository _repository;
+        private readonly IGenericRepository _repository;
         public DepartamentosController(ApplicationDbContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
             _repository = new DepartamentoRepository(context, mapper);
         }
 
         // GET: Departamentos
         public async Task<IActionResult> Index()
         {
-            return _context.Departamentos != null ?
-                        View(await _context.Departamentos.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Departamento'  is null.");
+            var departamentos = await _repository.GetAll();
+            return View(departamentos);
         }
 
         // GET: Departamentos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Departamentos == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var departamento = await _context.Departamentos
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departamento = await _repository.FindById(id);
             if (departamento == null)
             {
                 return NotFound();
@@ -60,8 +54,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(departamento);
-                await _context.SaveChangesAsync();
+                await _repository.Insert(departamento);
                 return RedirectToAction(nameof(Index));
             }
             return View(departamento);
@@ -70,12 +63,12 @@ namespace DepartamentosMunicipiosMVC.Controllers
         // GET: Departamentos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Departamentos == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var departamento = await _context.Departamentos.FindAsync(id);
+            var departamento = await _repository.FindById(id);
             if (departamento == null)
             {
                 return NotFound();
@@ -99,8 +92,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
             {
                 try
                 {
-                    _context.Update(departamento);
-                    await _context.SaveChangesAsync();
+                    await _repository.Update(departamento);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,13 +113,12 @@ namespace DepartamentosMunicipiosMVC.Controllers
         // GET: Departamentos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Departamentos == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var departamento = await _context.Departamentos
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departamento = await _repository.FindById(id);
             if (departamento == null)
             {
                 return NotFound();
@@ -141,23 +132,19 @@ namespace DepartamentosMunicipiosMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Departamentos == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Departamento'  is null.");
-            }
-            var departamento = await _context.Departamentos.FindAsync(id);
+
+            var departamento = await _repository.FindById(id);
             if (departamento != null)
             {
-                _context.Departamentos.Remove(departamento);
+                await _repository.Delete(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DepartamentoExists(int id)
         {
-            return (_context.Departamentos?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _repository.Exists(id);
         }
     }
 }

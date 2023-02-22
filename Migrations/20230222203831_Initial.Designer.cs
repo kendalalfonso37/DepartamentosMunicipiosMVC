@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DepartamentosMunicipiosMVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230222155136_Municipios")]
-    partial class Municipios
+    [Migration("20230222203831_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace DepartamentosMunicipiosMVC.Migrations
 
                     b.HasIndex("DepartamentoId");
 
-                    b.ToTable("Municipio");
+                    b.ToTable("Municipios");
                 });
 
             modelBuilder.Entity("DepartamentosMunicipiosMVC.Models.Municipio", b =>

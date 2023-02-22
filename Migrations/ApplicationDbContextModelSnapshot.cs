@@ -78,7 +78,7 @@ namespace DepartamentosMunicipiosMVC.Migrations
 
                     b.HasIndex("DepartamentoId");
 
-                    b.ToTable("Municipio");
+                    b.ToTable("Municipios");
                 });
 
             modelBuilder.Entity("DepartamentosMunicipiosMVC.Models.Municipio", b =>
