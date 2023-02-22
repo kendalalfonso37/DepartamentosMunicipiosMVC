@@ -1,0 +1,16 @@
+﻿using AutoMapper;
+using DepartamentosMunicipiosMVC.DTOs;
+using DepartamentosMunicipiosMVC.Models;
+
+namespace DepartamentosMunicipiosMVC.Mappers
+{
+    public class AutoMapperProfiles: Profile
+    {
+        public AutoMapperProfiles() {
+            CreateMap<Departamento, DepartamentoDTO>().ReverseMap();
+            CreateMap<DepartamentoCreationDTO, Departamento>();
+            CreateMap<Municipio, MunicipioDTO>().ReverseMap();
+            CreateMap<MunicipioCreationDTO, Municipio>();
+        }
+    }
+}
