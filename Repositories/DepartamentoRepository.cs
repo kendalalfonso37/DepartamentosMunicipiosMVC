@@ -38,7 +38,7 @@ namespace DepartamentosMunicipiosMVC.Repositories
 
         public async Task<Departamento> FindById(int? id)
         {
-            return await _context.Departamentos.FindAsync(id);
+            return await _context.Departamentos.FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task<List<Departamento>> GetAll()

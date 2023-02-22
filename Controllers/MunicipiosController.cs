@@ -14,33 +14,30 @@ namespace DepartamentosMunicipiosMVC.Controllers
 {
     public class MunicipiosController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
         private readonly MunicipioRepository _repository;
 
         public MunicipiosController(ApplicationDbContext context, IMapper mapper)
         {
             _repository = new MunicipioRepository(context, mapper);
-            _context = context;
         }
 
         // GET: Municipios
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Municipios.Include(m => m.Departamento);
-            return View(await applicationDbContext.ToListAsync());
+            var municipios = await _repository.GetAll();
+            return View(municipios);
         }
 
         // GET: Municipios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Municipios == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var municipio = await _context.Municipios
-                .Include(m => m.Departamento)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var municipio = await _repository.FindById(id);
             if (municipio == null)
             {
                 return NotFound();
@@ -52,7 +49,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
         // GET: Municipios/Create
         public IActionResult Create()
         {
-            ViewData["DepartamentoId"] = new SelectList(_context.Departamentos, "Id", "Nombre");
+            ViewData["DepartamentoId"] = new SelectList(_repository.GetDepartamentosDbSet(), "Id", "Nombre");
             return View();
         }
 
@@ -65,28 +62,27 @@ namespace DepartamentosMunicipiosMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(municipio);
-                await _context.SaveChangesAsync();
+                await _repository.Insert(municipio);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoId"] = new SelectList(_context.Departamentos, "Id", "Nombre", municipio.DepartamentoId);
+            ViewData["DepartamentoId"] = new SelectList(_repository.GetDepartamentosDbSet(), "Id", "Nombre", municipio.DepartamentoId);
             return View(municipio);
         }
 
         // GET: Municipios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Municipios == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var municipio = await _context.Municipios.FindAsync(id);
+            var municipio = await _repository.FindById(id);
             if (municipio == null)
             {
                 return NotFound();
             }
-            ViewData["DepartamentoId"] = new SelectList(_context.Departamentos, "Id", "Nombre", municipio.DepartamentoId);
+            ViewData["DepartamentoId"] = new SelectList(_repository.GetDepartamentosDbSet(), "Id", "Nombre", municipio.DepartamentoId); ;
             return View(municipio);
         }
 
@@ -106,8 +102,7 @@ namespace DepartamentosMunicipiosMVC.Controllers
             {
                 try
                 {
-                    _context.Update(municipio);
-                    await _context.SaveChangesAsync();
+                    await _repository.Update(municipio);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,21 +117,19 @@ namespace DepartamentosMunicipiosMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoId"] = new SelectList(_context.Departamentos, "Id", "Nombre", municipio.DepartamentoId);
+            ViewData["DepartamentoId"] = new SelectList(_repository.GetDepartamentosDbSet(), "Id", "Nombre", municipio.DepartamentoId);
             return View(municipio);
         }
 
         // GET: Municipios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Municipios == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var municipio = await _context.Municipios
-                .Include(m => m.Departamento)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var municipio = await _repository.FindById(id);
             if (municipio == null)
             {
                 return NotFound();
@@ -150,23 +143,19 @@ namespace DepartamentosMunicipiosMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Municipios == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Municipios'  is null.");
-            }
-            var municipio = await _context.Municipios.FindAsync(id);
+
+            var municipio = await _repository.FindById(id);
             if (municipio != null)
             {
-                _context.Municipios.Remove(municipio);
+                await _repository.Delete(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MunicipioExists(int id)
         {
-            return (_context.Municipios?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _repository.Exists(id);
         }
     }
 }

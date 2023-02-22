@@ -36,12 +36,17 @@ namespace DepartamentosMunicipiosMVC.Repositories
 
         public async Task<Municipio> FindById(int? id)
         {
-            return await _context.Municipios.FindAsync(id);
+            return await _context.Municipios.Include(m => m.Departamento).FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public Task<List<Municipio>> GetAll()
         {
-            return _context.Municipios.ToListAsync();
+            return _context.Municipios.Include(m => m.Departamento).ToListAsync();
+        }
+
+        public DbSet<Departamento> GetDepartamentosDbSet()
+        {
+            return _context.Departamentos;
         }
 
         public async Task<int> Insert(Municipio municipio)

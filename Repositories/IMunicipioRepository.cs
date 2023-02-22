@@ -1,4 +1,5 @@
 ﻿using DepartamentosMunicipiosMVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DepartamentosMunicipiosMVC.Repositories
 {
@@ -12,5 +13,7 @@ namespace DepartamentosMunicipiosMVC.Repositories
         Task<int> Count();
 
         bool Exists(int id);
+
+        DbSet<Departamento> GetDepartamentosDbSet();
     }
 }
